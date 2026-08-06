@@ -565,20 +565,28 @@ const WORD_BANK = [
 ];
 
 // ─── Phase & Difficulty Mapping ───
+//
+// New interleaved mapping (modes cycle within each tier):
+//  Level 1  → Tier 1, Phase 1 (Pair Drag)
+//  Level 2  → Tier 1, Phase 2 (Word Sort)
+//  Level 3  → Tier 1, Phase 3 (Crossword)
+//  Level 4  → Tier 2, Phase 1
+//  Level 5  → Tier 2, Phase 2
+//  Level 6  → Tier 2, Phase 3
+//  Level 7  → Tier 3, Phase 1
+//  Level 8  → Tier 3, Phase 2
+//  Level 9  → Tier 3, Phase 3
+//  Level 10 → Tier 4, Phase 3 (capstone)
 function getPhase(level) {
-  if (level >= 1 && level <= 4) return 1; // Pair Classification
-  if (level >= 5 && level <= 7) return 2; // Single Word Drag
-  if (level >= 8 && level <= 10) return 3; // Crossword
-  return 1;
+  if (level === 10) return 3; // capstone: hardest Crossword
+  const phaseMap = [1, 2, 3, 1, 2, 3, 1, 2, 3];
+  return phaseMap[(level - 1) % 3] || 1;
 }
 
 function getDifficultyForLevel(level) {
-  if (level <= 2) return [1];
-  if (level <= 4) return [1, 2];
-  if (level <= 6) return [2, 3];
-  if (level === 7) return [3];
-  if (level <= 9) return [3, 4];
-  return [4];
+  if (level === 10) return [4]; // capstone always tier 4
+  const tier = Math.min(Math.ceil(level / 3), 4);
+  return [tier];
 }
 
 // ─── Puzzle Generation ───
@@ -610,11 +618,11 @@ function getPuzzleForLevel(level, roundIndex) {
 }
 
 function generatePhase1(level, centerWord, rng) {
-  // Difficulty progression
-  let synCount = 2, antCount = 1, unrelCount = 1;
-  if (level === 2) { synCount = 2; antCount = 2; unrelCount = 1; }
-  else if (level === 3) { synCount = 2; antCount = 2; unrelCount = 2; }
-  else if (level === 4) { synCount = 3; antCount = 2; unrelCount = 2; }
+  // Phase 1 appears at levels 1 (tier 1), 4 (tier 2), 7 (tier 3)
+  // Word-count scaling increases with tier.
+  let synCount = 2, antCount = 1, unrelCount = 1; // level 1 (tier 1)
+  if (level === 4) { synCount = 2; antCount = 2; unrelCount = 2; } // tier 2
+  else if (level === 7) { synCount = 3; antCount = 2; unrelCount = 2; } // tier 3
 
   const pairs = [];
   const allSynonyms = [...centerWord.synonyms];
@@ -651,9 +659,11 @@ function generatePhase1(level, centerWord, rng) {
 }
 
 function generatePhase2(level, centerWord, rng) {
-  let synCount = 2, antCount = 2, unrelCount = 2;
-  if (level === 6) { synCount = 3; antCount = 2; unrelCount = 3; }
-  else if (level === 7) { synCount = 3; antCount = 3; unrelCount = 3; }
+  // Phase 2 appears at levels 2 (tier 1), 5 (tier 2), 8 (tier 3)
+  // Word-count scaling increases with tier.
+  let synCount = 2, antCount = 2, unrelCount = 2; // level 2 (tier 1)
+  if (level === 5) { synCount = 3; antCount = 2; unrelCount = 3; } // tier 2
+  else if (level === 8) { synCount = 3; antCount = 3; unrelCount = 3; } // tier 3
 
   const words = [];
   const allSynonyms = [...centerWord.synonyms];
@@ -689,9 +699,12 @@ function generatePhase2(level, centerWord, rng) {
 }
 
 function generatePhase3(level, centerWord, rng) {
-  let synCount = 2, antCount = 2;
-  if (level === 9) { synCount = 2; antCount = 3; }
-  else if (level === 10) { synCount = 3; antCount = 3; }
+  // Phase 3 appears at levels 3 (tier 1), 6 (tier 2), 9 (tier 3), 10 (capstone tier 4)
+  // Word-count scaling increases with tier.
+  let synCount = 2, antCount = 2; // level 3 (tier 1)
+  if (level === 6) { synCount = 2; antCount = 3; } // tier 2
+  else if (level === 9) { synCount = 3; antCount = 3; } // tier 3
+  else if (level === 10) { synCount = 3; antCount = 4; } // capstone tier 4 — max difficulty
 
   const words = [];
 

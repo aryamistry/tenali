@@ -404,7 +404,7 @@ export default function SynAntApp({ onBack }) {
         e.preventDefault();
       };
 
-      elem.addEventListener('touchstart', handleTouchStart);
+      elem.addEventListener('touchstart', handleTouchStart, { passive: false });
       elem.addEventListener('touchmove', handleTouchMove, { passive: false });
 
       return () => {
@@ -909,11 +909,15 @@ export default function SynAntApp({ onBack }) {
     }
   }
 
+  // Returns the mode label for a given level per the interleaved mapping:
+  //  Levels 1,4,7  → Pair Drag (Phase 1)
+  //  Levels 2,5,8  → Word Sort (Phase 2)
+  //  Levels 3,6,9  → Crossword (Phase 3)
+  //  Level 10      → Crossword (capstone)
   function getPhaseLabel(lvl) {
-    if (lvl >= 1 && lvl <= 4) return 'Pair Drag';
-    if (lvl >= 5 && lvl <= 7) return 'Word Sort';
-    if (lvl >= 8 && lvl <= 10) return 'Crossword';
-    return '';
+    if (lvl === 10) return 'Crossword';
+    const labels = ['Pair Drag', 'Word Sort', 'Crossword'];
+    return labels[(lvl - 1) % 3];
   }
 
   // ═══════════════════════════════════════════════════════════
