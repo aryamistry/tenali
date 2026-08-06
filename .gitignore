@@ -13,3 +13,7 @@ PR_DRAFT.md
 # local scratch / debug throwaways
 scratch/
 server/_probe*.js
+
+.env
+*.env
+.vscode/

@@ -1,0 +1,28 @@
+/* SynAnt App Styles */
+
+.draggable-item {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.draggable-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.draggable-item:active {
+  cursor: grabbing;
+}
+
+.drop-zone {
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.drop-zone:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Crossword cell focus */
+.crossword-cell:focus-within {
+  outline: 2px solid var(--clr-accent, #05c46b);
+  outline-offset: -2px;
+}

@@ -52,6 +52,8 @@ export default defineConfig({
       '/gk-api': { target: 'http://127.0.0.1:4000', changeOrigin: true },
       // Word Creator quiz API
       '/wordcreator-api': { target: 'http://127.0.0.1:4000', changeOrigin: true },
+      // SynAnt (Synonym/Antonym) quiz API
+      '/synant-api': { target: 'http://127.0.0.1:4000', changeOrigin: true },
       // Addition quiz API
       '/addition-api': { target: 'http://127.0.0.1:4000', changeOrigin: true },
       // Column Addition quiz API

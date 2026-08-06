@@ -9543,6 +9543,11 @@ app.use('/darts-api', dartsRouter);
 const wordCreatorRouter = require('./routes/wordCreator');
 app.use('/wordcreator-api', wordCreatorRouter);
 
+// SYNANT (SYNONYM/ANTONYM) PUZZLE ROUTER (synant-api)
+// ═══════════════════════════════════════════════════════════════════════════
+const synAntRouter = require('./routes/synAnt');
+app.use('/synant-api', synAntRouter);
+
 // CONTRAST CHALLENGE PUZZLE ROUTER (contrast-api)
 // ═══════════════════════════════════════════════════════════════════════════
 const contrastRouter = require('./routes/contrast');

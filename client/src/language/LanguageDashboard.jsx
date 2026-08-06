@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WordCreatorApp from './WordCreatorApp';
 import CrosswordApp from './CrosswordApp';
 import WordSearchApp from './WordSearchApp';
+import SynAntApp from './SynAntApp';
 
 /**
  * LanguageDashboard Component
@@ -17,6 +18,12 @@ export default function LanguageDashboard({ onBack }) {
       name: 'Word Creator',
       subtitle: 'Fill in the blanks to create valid words from patterns.',
       color: 'green'
+    },
+    {
+      key: 'synant',
+      name: 'Syn & Ant',
+      subtitle: 'Master synonyms and antonyms through drag, sort, and crossword puzzles.',
+      color: 'blue'
     },
     {
       key: 'crossword',
@@ -39,6 +46,10 @@ export default function LanguageDashboard({ onBack }) {
 
   if (selectedGame === 'wordcreator') {
     return <WordCreatorApp onBack={() => setSelectedGame(null)} />;
+  }
+
+  if (selectedGame === 'synant') {
+    return <SynAntApp onBack={() => setSelectedGame(null)} />;
   }
 
   if (selectedGame === 'crossword') {
