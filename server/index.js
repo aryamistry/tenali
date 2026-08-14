@@ -14280,7 +14280,22 @@ io.on('connection', (socket) => {
 app.use((err, req, res, next) => {
   logger.error('http', `${req.method} ${req.originalUrl} ->`, err);
   if (res.headersSent) return;
-  res.status(err.status || 500).json({ error: 'Internal server error' });
+  // Map common client-error statuses (and Express body-parser's
+  // SyntaxError → 400) to a useful message instead of the misleading
+  // 'Internal server error'. Anything we don't recognise still falls
+  // through to 500.
+  const status = err.status || 500;
+  let message = 'Internal server error';
+  if (status === 400) {
+    message = err.type === 'entity.parse.failed' || err instanceof SyntaxError
+      ? 'Invalid JSON body'
+      : 'Bad request';
+  } else if (status === 413) {
+    message = 'Request body too large';
+  } else if (status === 415) {
+    message = 'Unsupported media type';
+  }
+  res.status(status).json({ error: message });
 });
 
 // Loads the two large question sets concurrently (Promise.all lets their
